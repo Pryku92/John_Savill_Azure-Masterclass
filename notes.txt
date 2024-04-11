@@ -1,0 +1,142 @@
+group membership types:
+
+- assigned
+- dynamic (Entra ID P1)
+
+group types:
+
+- security
+- MS365
+
+Entra ID licenses
+
+- free
+- Visual Studio
+- premium P1 / P2
+- assinged individually or to groups
+
+
+Entra ID objects
+
+- users
+- groups
+- enterprise applications /  Azure resources (service principals)
+- managed identities
+- devices
+- "stuff"
+
+
+Entra ID devices types:
+
+- registered / authn MSA
+- joined / authn AAD
+- hybrid (joined to on-prem AD and synced to AAD)
+
+
+Entra connect
+
+- on-prem AD is always the source of truth
+- single instance of AAD can only sync from one Azure AD connect (and optional staging)
+- an on-prem AD can sync to multiple AAD instances
+- Azure AD connect cloud sync - cloud-based sync engine
+
+
+AuthN methods
+
+- cloud native
+- password hash sync (PHS) - cloud
+- passthrough authentication (PTA) - to on-prem DCs, hybrid
+- federation - against federation service, hybrid
+
+
+Authorization is always against Entra ID.
+
+Azure AD roles are assinged globally by default but the scope can be lmited by using administrative units.
+
+Azure AD roles can be assigned to users and special type of group (cloud)
+
+Administrative units can't be nested.
+
+mystaff.microsoft.com - scaled down interface for managing objects in an administrative unit
+
+entra.microsoft.com
+
+portal.azure.com
+
+
+
+Privileged identity management
+
+- enables elevation of Azure AD (and ARM) roles when needed for limited time
+- can be used to elevate to a privileged group membership or ownership for limited time
+- roles must be pre-assigned to be available to users
+- Entra ID P2
+
+
+Privileged identitiy management (PIM) is Entra ID's just in time solution.
+
+
+Entra permissions management
+
+- allows on-demand elevation
+- ad-hoc (as opposed to premeditated process with PIM)
+- works across clouds (Azure, AWS, GCP)
+- can analyze permissions used and right size
+- separate license
+
+
+Access reviews
+
+- allows to act against permissions balooning over time
+- enable review on group membership, app assignment, role assignment
+- reviews by different people (self-review, administrator, delegated people)
+- Azure AD P2
+
+
+Azure AD MFA
+
+- Azure AD P1 or Security Defaults
+- passwordless is considered phising resistant
+
+
+Temporary access pass allows user to set up when using passwordless authentication.
+
+
+
+Conditional access
+
+- triggered for any authorization regardless of authentication method
+- Azure AD P1
+
+
+
+
+Continous access evaluation - ongoing communication between athenticator (app to be accessed) and the IdP.
+
+
+B2B & B2C
+
+Cross-tenant access settings provide control on B2B collaboration and inbound MFA trust.
+
+B2C is aimed at customers as a separate type and tenant instance that is fully customizable with other types of social identity support.
+
+
+
+Entitlement management enables access packages to be created of groups, applications, sharepoint sites.
+
+Lifecycle workflows automate tasks associated with on and off boarding.
+
+
+Azure AD DS provides a managed AD with objects replicated from AAD.
+
+
+
+
+
+
+
+
+
+
+
+
