@@ -1,3 +1,6 @@
+############################# IDENTITY #############################
+
+
 group membership types:
 
 - assigned
@@ -26,19 +29,19 @@ Entra ID objects
 - "stuff"
 
 
-Entra ID devices types:
+Entra ID device types:
 
 - registered / authn MSA
-- joined / authn AAD
-- hybrid (joined to on-prem AD and synced to AAD)
+- joined / authn Entra ID
+- hybrid (joined to on-prem AD and synced to Entra ID)
 
 
 Entra connect
 
 - on-prem AD is always the source of truth
-- single instance of AAD can only sync from one Azure AD connect (and optional staging)
-- an on-prem AD can sync to multiple AAD instances
-- Azure AD connect cloud sync - cloud-based sync engine
+- single instance of Entra ID can only sync from one Entra connect (and optional staging)
+- an on-prem AD can sync to multiple Entra ID instances
+- Entra connect cloud sync - cloud-based sync engine
 
 
 AuthN methods
@@ -51,9 +54,9 @@ AuthN methods
 
 Authorization is always against Entra ID.
 
-Azure AD roles are assinged globally by default but the scope can be lmited by using administrative units.
+Entra ID roles are assinged globally by default but the scope can be lmited by using administrative units.
 
-Azure AD roles can be assigned to users and special type of group (cloud)
+Entra ID roles can be assigned to users and special type of group (cloud)
 
 Administrative units can't be nested.
 
@@ -67,7 +70,7 @@ portal.azure.com
 
 Privileged identity management
 
-- enables elevation of Azure AD (and ARM) roles when needed for limited time
+- enables elevation of Entra ID (and ARM) roles when needed for limited time
 - can be used to elevate to a privileged group membership or ownership for limited time
 - roles must be pre-assigned to be available to users
 - Entra ID P2
@@ -90,12 +93,12 @@ Access reviews
 - allows to act against permissions balooning over time
 - enable review on group membership, app assignment, role assignment
 - reviews by different people (self-review, administrator, delegated people)
-- Azure AD P2
+- Entra ID P2
 
 
-Azure AD MFA
+Entra ID MFA
 
-- Azure AD P1 or Security Defaults
+- Entra ID P1 or Security Defaults
 - passwordless is considered phising resistant
 
 
@@ -106,7 +109,7 @@ Temporary access pass allows user to set up when using passwordless authenticati
 Conditional access
 
 - triggered for any authorization regardless of authentication method
-- Azure AD P1
+- Entra ID P1
 
 
 
@@ -127,7 +130,20 @@ Entitlement management enables access packages to be created of groups, applicat
 Lifecycle workflows automate tasks associated with on and off boarding.
 
 
-Azure AD DS provides a managed AD with objects replicated from AAD.
+Entra Domain Services provides a managed AD with objects replicated from Entra ID.
+
+
+
+
+
+
+############################# GOVERNANCE #############################
+
+
+
+
+
+
 
 
 
