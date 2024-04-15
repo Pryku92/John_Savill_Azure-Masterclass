@@ -31,7 +31,7 @@ Entra ID objects
 
 Entra ID device types:
 
-- registered / authn MSA
+- registered / authn MSA (BYOD)
 - joined / authn Entra ID
 - hybrid (joined to on-prem AD and synced to Entra ID)
 
@@ -139,13 +139,132 @@ Entra Domain Services provides a managed AD with objects replicated from Entra I
 
 ############################# GOVERNANCE #############################
 
+Key organizational components
+
+- Management groups
+- Subscriptions
+- Resource groups
+
+
+Governance capabilities
+
+- RBAC
+- Policy
+- Budget
+- locking (subscriptions, resource groups, resources)
+
+
+
+Locks are inherited.
+
+Locks work at the control plane (ARM).
+
+Governance is about enforcement of rules and ensuring proper functioning to standards.
+
+compliance.microsoft.com
+
+Root management group is automatically created when first management group is created.
+
+Subscriptions can be moved between different Entra ID tenants.
+
+Every resource exists in a single resource group.
+
+Resource groups cannot be nested.
+
+
+
+RBAC
+
+- works at all level (management group -> individual resources)
+- inherited
+- works at the management plane (some services support data plane actions)
+- actions that can be included in an RBAC role are defined in resource providers
+- can create custom roles
+
+
+resources.azure.com - to see resource providers
+
+
+ABAC - Attribute Based Access Control
+
+ABAC adds conditions to role assignements based on attributes of the resources and potentially the principal acessing.
+
+
+
+Policy
+
+- can be used for enforcement and audit
+- start with audit!
+- a policy is a set of conditions built around resource attribute aliases and an effect
+- can impact operations (DenyAction)
+- can be grouped into initiatives for assignment and compliance
 
 
 
 
+Cost management and budgets
+
+- cost management provides insight and control of Azure (and AWS) spend
+	- cost analysis
+	- cost anomaly alerts
+	- budgets (alerts & action groups)
+- cost allocation (cost spliting of shared resources) with Enterprise Agreement or Customer Agreement
+- API available
+- pricing calculator
 
 
 
+Cost optimization
+
+- right sizing, autoscaling, serverless, shutdown unused resources
+- Reserved Instances - discount for a commitment of specific resource / family in specific region for 1 or 3 years
+- Azure Savings Plan - discount (lower than RI) for 1 or 3 years commitment, more flexible and broad than RI
+- Azure Hybrid Benefit - allows utilization of existing Windows and SQL licenses to Azure resources
+
+
+On-Demand Capacity Reservation provides SLA backed capacity availability and works with cost optimization tool (i.e. Reserved Instances).
+
+
+
+Tagging
+
+Tagging works on subscriptions, resource groups and resources.
+
+Tag values can be JSON documents.
+
+Tags can be enforced through policy.
+
+Tags can be used for search, filter and billing.
+
+Not inherited but can be copied through policy.
+
+Cost management enables inheritance for usage records related to billing (the tag is not applied directly to the resource).
+
+
+
+Blueprints & Deployment Stacks
+
+Blueprints gather together different types of artifacts (resource groups, RBAC, ARM templates, policy, etc.) in their own construct for deployment together.
+
+Blueprints have "ability" to deny actions (i.e. write or delete operations).
+
+Deployment Stacs perform similar function - they are deployment of a collection of resources and perform lifecycle operations on that collection of resources.
+
+
+
+Azure Resource Graph & Resource Configuration Changes
+
+ARG provides way to query ARM efficiently and across subscriptions using KQL
+
+KQL is also used in Log Analytics.
+
+ARG can be used via portal or command line.
+
+ARG powers Resource Configuration Changes (ResourceChanges)
+
+
+
+Azure Advisor provides recommendations around key areas of the Azure environment.
 
 
 
