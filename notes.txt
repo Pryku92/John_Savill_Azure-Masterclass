@@ -269,6 +269,268 @@ Azure Advisor provides recommendations around key areas of the Azure environment
 
 
 
+############################# RESILIENCY #############################
+
+Types of dangers to protect against
+
+- software (app, OS, other) failure
+- hardware failure
+- corruption
+- attack
+- regulatory rquirements
+- human error
+
+
+Often multiple mitigation options will be used to address different needs / threats.
+
+Good monitoring supports resiliency.
+
+
+
+Protecting against infrastructure failure & logical corruption
+
+
+Backups / snapshots - previous point-in-time state, protects against logical corruption of data (i.e. ransomware).
+
+Backups vs snapshots - backups are typically stored in different media.
+
+Replication - copy of the current data stored somewhere else, protects against physical infrastructure failure.
+
+Replication of data
+
+- if physically close (availability set) - synchronous - High Availability
+- if physically distant (regions pairs) - asynchronous - Disaster Recovery
+
+
+RPO - Recovery Point Objective - How much data can I loose? (i.e. RPO of 5 minutes - "I can lose up to 5 minutes of data").
+
+RTO - Recovery Time Objective - How long till I'll have to be running again?
+
+
+
+Protecting against human errors
+
+Humans should have as little contact with production as possible.
+
+Taking care when using orchestration tools.
+
+Automated deployments triggered from version control systems that have automated validation and testing.
+
+Deployment patterns (i.e. cannary, rings, blue-green).
+
+Established processes.
+
+
+
+
+UAT - User Acceptance Testing - ??
+
+
+
+Avoid "pets"
+
+- everything should be able to be easily recreated from version control stored configurations (it breaks -> I delete it -> I recreate it).
+- state should be in specific components of the application architecture (i.e. database)
+
+
+
+Knowing the critical services and their dependencies
+
+- identifying the key systems / applications
+- understanding their architecture (i.e. what tiers are they made up of and where is the state?)
+- understanding their dependencies (i.e. load balancers, firewall, access control, etc.)
+
+
+
+SLA
+
+Composite SLA - overall SLA depends on the AND / OR relationships between instances of services and application tiers.
+
+AND relationships - multiply chances of being available - lower overall SLA
+
+OR relationships - multiply chances of being unavailable - higher overall SLA
+
+
+
+Testing
+
+- application testing
+- load testing
+- deployment process testing
+- failover testing
+- restore testing
+- security testing
+ 
+
+
+Chaos engineering
+
+Chaos engineering introduces failures into the system.
+
+Azure Chaos Studio is a service for chaos engineering.
+
+
+
+Blast radiuses
+
+- Availability Set - rack / node level failure
+- Availability Zone - datacenter / datacenter set level failure
+- Region / Region pair
+
+
+
+
+Create separate Availability Sets for different workloads (i.e. app tiers).
+
+Datacenter set - set of datacenters sharing power, cooling, networking facilities (Availability Zone).
+
+Every subscription has different mapping of Availability Zones - datacenter sets.
+
+Region is defined as two milisecond latency (rtt) envelope.
+
+
+
+
+Proximity Placement Group allows to place resources close together in terms of network hops and latency.
+
+
+
+Asynchronous vs synchronous replication - synchronous within location, asynchronous across location.
+
+
+Asynchronous - transactions are committed on primary as created and then sent to secondary ASAP
+	- no real impact to primary performance
+	- risk of data loss in unplanned failure
+
+Synchronous - transactions are not committed on primary until acknowledged on the secondary
+	- can impact primary performance
+	- no risk of data loss
+
+Asynchronous is used cross-site because of latency in nearly all scenarios.
+
+
+
+Azure resources use of resiliency constructs
+
+Some Azure services are global and resilient against any regional failure
+	- Entra ID, Front Door, Traffic Manager, DNS zones
+
+Most services are deployed to a specific region, with different options available
+	- Regional
+	- Zone-redundant
+	- Zonal
+
+Make sure all components match and don't cross resiliency boundaries for dependencies.
+
+
+
+Multi-region deployments
+
+Azure regions are paired for serialized platform updates.
+
+Multi-region deployment could be active / passive or active / active depending on the app architecture.
+
+Some resources can't move between regions (i.e. public IP).
+
+Need to balance between regions
+	- Azure Traffic Manager
+	- Azure Front Door
+	- Cross-region Load Balancer
+	- DNS
+
+
+
+Use IaC
+
+- ensures consistency
+- enables rebuild
+- policy to enforce consistency between deployments
+
+
+
+Stateless workloads might not need replication - they might be rebuild with IaC.
+
+
+
+VM replication
+
+- on-prem to Azure (Azure Site Recovery)
+	- Hyper-V VMs (host provider based)
+	- VMware VMs or physical (in-guest Mobility Service)
+
+- Azure to Azure (Azure Site Recovery)
+	- uses Mobility Service via extension
+	- multi-VM consistency groups
+
+Crash and app consistent recovery points.
+
+It's possible to replicate from AWS to Azure.
+
+
+
+Highest layer (i.e. app level) replication solution should be picked for each element in DR.
+
+Processes can still be automated across different replication technologies with recovery plans.
+
+
+
+Types of DR failover
+
+- planned
+	- "A storms coming, lets move our sytems to the DR location."
+	- should be no data loss or unexpected outage
+
+- unplanned
+	- "Where did that storm come from and where has the datacenter gone?"
+	- data loss and longer outage may occur depending on replication and process
+
+- test
+	- "Lets test the failover process, while not affecting the production, in case there is a storm one day."
+
+
+Make sure DR location and plan is part of change control (is the DR environment / configuration in sync with production?).
+
+
+
+Backup
+
+Backup center provides unified interface for all backup solutions.
+
+Azure provides backup services via Azure Recovery Services and Azure Backup.
+
+They can be used by backup applications and many Azure components, also for hybrid workloads.
+
+Delta-based storage with many recovery points.
+
+Configurable retention settings.
+
+Vaults can have local, zone-redundant or geo-redundant configuration.
+
+Some services utilize their own backup techonologies (i.e. Azure SQL Database).
+
+
+MUA - Multi-User Authorization
+
+Multi-User Authorization can protect if environment is compromised.
+
+Resource Guard has to be created in the same region as the protected service / resource.
+
+Resource Guard may be different subscription and optionally different Entra ID tenant than the protected service / resource.
+
+MUA applies a Resource Guard on any critical Recovery Services Vault operation.
+
+A separate role must be granted to the backup operator for the Resource Guard before the critical operations can be performed.
+
+There is option to turn on immutability on backup vaults.
+
+
+
+
+
+
+############################# STORAGE #############################
+
+
 
 
 
