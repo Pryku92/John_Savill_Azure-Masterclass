@@ -277,7 +277,7 @@ Types of dangers to protect against
 - hardware failure
 - corruption
 - attack
-- regulatory rquirements
+- regulatory requirements
 - human error
 
 
@@ -420,8 +420,6 @@ Most services are deployed to a specific region, with different options availabl
 	- Zone-redundant
 	- Zonal
 
-Make sure all components match and don't cross resiliency boundaries for dependencies.
-
 
 
 Multi-region deployments
@@ -462,7 +460,7 @@ VM replication
 	- uses Mobility Service via extension
 	- multi-VM consistency groups
 
-Crash and app consistent recovery points.
+Crash and app consistent recovery points. - ??
 
 It's possible to replicate from AWS to Azure.
 
@@ -529,6 +527,240 @@ There is option to turn on immutability on backup vaults.
 
 
 ############################# STORAGE #############################
+
+Types of data
+
+- structured - adhering to a strict, defined schema (i.e. databases)
+- unstructured - blobs - media files, PDF documents, etc.
+- semi-structured - XML, JSON
+
+
+Different workloads have needs for ephemeral or durable storage.
+
+Azure doesn't use traditional storage such as Storage Area Networks (mostly).
+
+Azures uses a 3-tier architecture within storage stamps (clusters) - Stream Layer (data), Partition Layer (namespace), Front-End Layer (interaction).
+
+DNS is used for the namespace (services accesses by URIs) - that's why Storage Account's name has to be unique across Azure.
+
+Data is replicated in two ways
+	- intra-stamp replication (at the stream layer) - synchronous and keeps data durable within the stamps (in the single region)
+	- inter-stamp replication (at the partition layer) - asynchronous replication of data across stamps (i.e. to the paired region)
+
+
+
+Azure Storage Account
+
+- top-level namespace for storage services
+- created in a region
+- different types of storage accounts (standard vs premium)
+- various redundancy (replication) settings
+- supports API access
+- have 2 all-powerful account keys (protect OR disable them)
+- performance varies based on the account type (standard vs premium)
+- supports different access tiers (varies by the service type)
+- can enable monitoring and logging
+
+
+Standard performance storage services are consumption-based.
+
+Some premium storage services are provision-based (based on size).
+
+Managed disks are always provision-based.
+
+
+
+Access tiers
+
+General-purpose V2 storage account:
+	- hot
+	- cool
+	- archcive (offline)
+
+- set at the blob level (per blob)
+
+Files shares:
+	- transaction optimized
+	- hot
+	- cool
+
+- set at the file share level
+
+
+
+Storage account services
+
+- blob
+- table (entities (key - value pairs))
+- queue (FIFO (not guaranteed) messages)
+- files (shares - SMB or NFS)
+
+
+
+Blob storage
+
+Types of blobs:
+
+- block
+- page (random operations)
+- append
+
+
+Block blob storage support hierarchical namespace (file system) via Azure Data Lake Storage gen. 2
+
+Blob storage (all types) supports blob index tags (additional metadata).
+
+
+
+Azure Storage Explorer
+	- locally installed app
+	- HTML 5 based
+	- uses storage account keys or Entra ID integration
+	- supports server-side copying of data
+
+
+
+AzCopy - command-line tool to copy data to / from and between Storage Accounts.
+
+
+
+
+Data Lake
+
+Azure Data Lake Storage gen. 2 builds on blob
+
+ADLSgen2 provides a data lake which is common as raw store for data pipeline (ETL & ELT).
+
+ADLSgen2 provides true directory structure (regular blob is flat with any structure being virtual).
+
+ADLSgen2 supports POSIX ACLs, as well as Entra ID data plane RBAC.
+
+Data lake is mainly used for data analytics.
+
+
+
+Statis website hosting in blob storage
+
+A static content website can be hosted via blob storage (enabled at the storage account level).
+
+
+
+
+Azure Storage access control
+
+- Entra ID integration (data plane RBAC)
+	- blob
+	- queue
+	- table
+- account keys - can be disabled
+- Shared Access Signatures (SAS) - signed with account keys (access keys need to be enabled)
+	- account SAS - only ad-hoc (can't be revoked without regenerating the signing account key)
+	- service SAS - ad-hoc or via Stored Access Policy (can be revoked)
+- Azure Files integration with ADDS and Entra ID DS
+
+
+
+DO NOT STORE ACCOUNT KEYS OR SAS IN APP CODE / CONFIG FILES
+
+
+
+
+Encryption
+
+- storage accounts are always encrypted at rest
+- encrypted with Microsoft managed keys or Customer Managed Keys (via Azure Key Vault)
+- cross-tenant Customer Managed Keys supported
+- different container / blob level encryption possible via Encryption Scopes
+- encryption in transit can be enforced at the storage account level
+
+
+
+
+Networking
+
+Resource Instance Rules allow access from specific instances of Azure services.
+
+
+
+
+Lifecycle Management allows to move between tiers / delete blobs as defined by rules and based on modify, and access times.
+
+
+
+Native protection
+
+Snaphots
+	- point-in-time view of blob or files share that is read-only
+	- incremental storage (delta based)
+
+Point-in-time restore
+	- blob versioning
+	- change feed
+	- soft delete
+
+
+
+Azure File Sync
+	- single cloud endpoint per sync group
+	- up to 100 servers per sync group
+	- replicates via the cloud endpoint (no direct replication between servers)
+	- enables cloud tiering of data to optimize local capacity
+
+
+
+
+Azure Netapp Files
+	- alternative for Azure File Sync
+	- first-party offering using NetApp hardware in Azure datacenters
+	- SMB and NFS support (also dual for single volume)
+	- non-standard cross-region replication
+
+
+
+
+
+Managed Disks
+	- abstracts away the storage account
+	- price based on provisioned capacity not the consumed capacity
+	- some SKUs can be dynamically expanded for data disks (not OS disks)
+	- limited distributed (GRS, ZRS) replication options
+	- can add resiliency by aligning with Availability Sets
+	- can be shared by multiple VMs (maxShares property)
+	- Customer Managed Key can be used via Disk Encryption Sets which Managed Disks are placed in
+
+
+
+VM storage
+	- VMs have OS disks that normally are durable but for some can be ephemeral if state not required
+	- MOST VMs have a temporary drive (SSD based) (D: or /dev/sdb1 by default) which is not-persistent
+	- additional data disks can be added (number depends on VM size)
+
+
+Do not use RAID sets, parity or mirrored Storage Spaces - only simple (the storage is already replicated 3 times).
+
+Combining multiple data disks in a simple volume provides higher IOPS.
+
+
+
+Import/Export can be used to import or export large volumes of data offline (physical disks shipping).
+
+Azure Data Box allows to offline import / export large volumes of data by using Azure provided disks / appliances.
+
+Data is encrypted using BitLocker.
+
+
+
+
+Data governance
+	- Microsoft Purview provides a data governance solution across entire data estate (also hybrid and multi-cloud).
+
+
+
+
+
+
+
+
 
 
 
