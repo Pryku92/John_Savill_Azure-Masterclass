@@ -759,6 +759,239 @@ Data governance
 
 
 
+############################# NETWORKING #############################
+
+
+VNET basics
+	- a virtual network exists
+		- within a specific subscription
+		- within a specific region
+		- cannot span subscriptions nor regions
+	- consists of one or more IP ranges (IPv4 and optionally IPv6), typically RFC 1918
+	- address space is broken up into subnets with the smallest possible being a /29 (3 usable IPs)
+	- subnets are regional and span Availability Zones
+
+
+Ingress traffic (traffic coming to Azure) is free, egress traffic (traffic leaving Azure) is paid.
+
+
+
+
+VM NIC
+	- primary IP always comes via fabric (guest using DHCP)
+	- IP can be reserved
+	- VMs can be configured with multiple NICs
+	- each NIC can be in same or different virtual subnet but always in the same virtual network
+	- many VM types support accelerated networking
+	- multiple IP configurations per NIC (secondary addresses need to be configured in guest manually)
+	- IP configuration has private IP and optional public IP
+
+
+
+
+Accelerated networking allows for VM NICs to use physical host's NIC directly (omitting virtual switch and associated latency).
+
+
+
+Supported types of network traffic
+	- standard IP-based protocols supported (including TCP, UDP, ICMP)
+	- multicast, broadcast, IP-in-IP packet encapsulation and GRE blocked
+	- pinging and traceroute do not work with the subnet gateway
+	- layer 2 VLANs are not supported
+
+
+
+IPv6
+	- virtual networks are dual stack
+	- IPv6 is supported by standard Azure networking features (NSG, UDR, LB, peering, etc.)
+	- NIC cannot be IPv6 only
+	- can enable IPv6 for existing resources
+	- public IPs can be IPv6
+
+
+
+
+External access
+	- no delegated "DMZ" subnet where resources automatically get a public IP
+	- by default Azure provides outbound SNAT/PAT enabling resources to access the Internet and receive responses
+
+
+
+Security
+	- only ports to offered services should be exposed
+	- DO NOT enable RDP, SSH etc. on the internet facing IPs (i.e. use Azure Bastion instead)
+
+
+
+SNAT
+	- implicit - default SNAT/PAT
+	- explicit
+		- instance level public IP (not recommended)
+		- Load Balancer
+		- NAT Gateway
+
+
+Outbound connectivity services
+	- Public IP (instance level)
+	- Load Balancer
+	- NAT Gateway
+
+
+
+Inbound connectivity services
+	- global (not bound to specific regions)
+		- Azure Front Door (L7)
+		- Global Load Balancer (L4)
+		- Azure Traffic Manager (L4, DNS based)
+	- regional (deployed in a particular region)
+		- App Gateway (L7)
+		- Load Balancer (L4)
+
+	Azure Firewall ??
+
+
+Azure Bastion - managed jump box.
+
+
+
+Bring Your Own IP
+	- it's possible to bring own IP address space
+	- minimum IPv4 prefix /24
+	- multi-stage process (validate -> provision -> commission (advertise))
+
+
+
+Connecting Virtual Networks
+	- VNet peering enables virtual networks to be connected via the Microsoft backbone in the same or different regions (global peering)
+	- there is a small ingress and egress charge for traffic via network peering (between regions ?)
+	- IP address spaces cannot overlap
+	- peerings can span subscriptions and Entra ID tenants
+	- peerings are not transitive (can be by using UDR or Azure Virtual Network Manager)
+
+
+
+Azure Virtual Network Manager - ??
+
+
+
+Connecting to on-premises
+	- P2S VPN - connects a specific device to a virtual network
+	- S2S VPN - connects a network to a virtual network
+		- S2S VPN gateways enable multiple VPN connections to different networks (route based, not policy based)
+	- ExpressRoute Private Peering - connects a network to a virtual network via peering location and ExpressRoute Gateway
+		- ExpressRoute circuits enable multiple virtual networks to be connected to a single circuit (for connecting VNETs better to use peering)
+
+
+ExpressRoute has the benefit of not going over the internet - privacy and consistent latency.
+
+
+
+Azure ExpressRoute pricing
+	- metered - pay for the actual amount of egress traffic
+	- unmetered
+
+
+Global Reach - allows to connect on prem locations via Microsoft backbone
+
+
+
+Azure Route Server - ??
+
+
+
+ExpressRoute Fastpath
+	- typically ExpressRoute Gateways are part of the data path from the Microsoft Enterprise Edge (MSEE) at the peering location to the target resource
+	- Fastpath removes the gateways as part of the data path enabling higher throughput
+
+
+Controlling traffic flows
+	- Azure Firewall or an NVA with traffic routed to it via UDR
+	- Network Security Groups (optionally using Application Security Groups and Service Tags)
+
+
+
+Network Security Group
+	- implementation of layer 4 ACLs
+	- made up of rules based on IP ranges / tags, ports and actions
+	- can be applied at the subnet or NIC level but are always enforced at the NIC (better to apply at the subnet level - more managable)
+
+
+
+Service Tags
+	- standard tags pointing to public IP address spaces used by different Azure services 
+
+
+
+Azure Firewall
+	- managed NVA based on VMSS
+	- able to filter traffic at the layer 7
+	- IDS / IPS capabilites
+	- TLS inspection
+	- NAT capabilites
+
+
+
+Application Security Group
+	- user defined tags applied to NICs which can be used instead of IP ranges in NSG rules
+	- has to be in the same region as the NSG it's used in
+
+
+
+Azure Virtual WAN
+	- provides a managed hub
+	- each region within the VWAN instance gets a hub
+	- SKUs - basic / standard
+
+
+
+Service Endpoint
+	- NSGs are focused on traffic into and out of the virtual network
+	- many Azure PaaS offerings have their own firwall capabilities to lock down access
+	- Service Endpoints make a specific subnet known to a specific Azure service (resources in VNETs use private addressing)
+	- Service Endpoints add optimal path to the service
+	- the firewall on the service can be configured to allow only specific subnet made known by using Service Enpoint
+
+
+When an externally facing Azure PaaS service is accessed from a resource in a VNET the traffic stays on the Azure network.
+
+
+
+Service Enpoint Policy
+	- control access to PaaS services on the VNET side
+	- allows to define access only to specific instances of services from a VNET (more specific than Service Tags)
+	- prevents data exfiltration
+
+
+
+Azure Private Link / Private Endpoint
+	- by default most PaaS services have an external facing endpoint
+	- Private Link allows to create a Private Endpoint in a specific VNET / subnet (IP from that address space) for a specific instance of a PaaS service
+	- resources in the VNET can interact via the Private Endpoint directly to the service (as if it was in the same network / subnet)
+	- Private Endpoints can also point to custom services (i.e. sitting behind a load balancer) - removes the need to peer VNETs and allows to circumvent issue of overlapping IP address spaces.
+	- becuase Private Endpoints are instance specific, they help prevent data exfiltration
+
+
+
+
+168.63.129.16 - special Azure address - ??
+
+
+
+DNS in Azure
+	- VNETs can use Azure DNS or custom DNS
+	- Azure DNS can provide public and private zones
+	- VNETs can be linked to private DNS zones in addition to the built-in internal.cloudapp.net which is always present
+		- 1 private zone for auto-registration
+		- up to 1000 private zones for resolution
+	- Private DNS Resolver service available (allows to resolve inbound and outbound queries between Azure private DNS and custom customer-managed DNS servers)
+
+
+
+
+
+
+
+
 
 
 
