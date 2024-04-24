@@ -990,6 +990,85 @@ DNS in Azure
 
 
 
+############################# VM & VMSS #############################
+
+
+
+VM Basics
+	- VMs are the building block of many services in Azure
+	- full access to everything inside the VM OS and above
+	- responsibility for everything OS and above (with many Azure extensions and services to help)
+	- different VM series have different focus in terms of resource ratios and capabilities
+	- within a series there are sizes with resources typically proportionally increasing
+	- some VMs have vCPU constrained options to meet licensing requirements (limited number of vCPUs)
+	- processor performance measured in ACU (Coremark)
+
+
+
+VM Generations
+	- generation 1 VMs are based on BIOS
+	- generation 2 VMs are based on UEFI which enables additional (mostly security focused) technologies (i.e. trusted launch)
+	- not all VM SKUs support all generations
+	- VM images are generation specific as the boot architecture is different
+	- VHDX is not supported
+
+
+
+VM Status
+	- Stopped - stopped in the guest OS (VM still provisioned)
+	- Stopped (deallocated) - deprovisioned in Azure
+
+
+
+Virtual Machine Selector - web-based gui tool to select right SKU / size for the workload
+
+
+
+
+Isolated compute options
+	- Isolated VMs
+	- Dedicated Host
+	- Azure Stack Hub, Edge, HCI (on-prem)
+	- ARC (to extend control plane)
+	- Bare-metal (specialized workloads)
+
+
+
+Azure Marketplace
+
+Azure Compute Gallery
+	- repository of customer defined OS images and VM apps
+	- enables versioning and replication of stored resources (a regional resource itself)
+	- allows sharing across subscriptions and tenants
+
+
+IMDS (Instance Metadata Service) - an endpoint (169.254.169.254) available inside the guest, used to communicate to the ARM to get information about itself and the surounding environment.
+
+
+Azure Automanage - VM management soulution based on configuration profiles (default and custom) that automatically provision and configure maintenance services (backup, monitoring etc.).
+
+
+
+Azure VMware Solution
+	- a first-party Azure offering in partnership with VMware
+	- allows to deploy private, VMware based clusters on Azure physical infrastructure
+	- connects to Azure and outside via ExpressRoute to MSEE
+
+
+
+
+VM Scale Sets (VMSS)
+	- two modes of operation
+		- flexible (preffered) - allows to mix and match different types of supported VMs
+		- uniform (legacy) - automatically provisions and deprovisions VMs based on configured profile
+
+
+
+Gibibyte - 2^30
+
+Mebibyte - 2^20
+
+Kibibyte - 2^10
 
 
 
