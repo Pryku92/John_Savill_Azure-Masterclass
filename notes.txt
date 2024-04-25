@@ -130,7 +130,7 @@ Entitlement management enables access packages to be created of groups, applicat
 Lifecycle workflows automate tasks associated with on and off boarding.
 
 
-Entra Domain Services provides a managed AD with objects replicated from Entra ID.
+Entra Domain Services provides a managed ADDS with objects replicated from Entra ID.
 
 
 
@@ -187,7 +187,7 @@ resources.azure.com - to see resource providers
 
 ABAC - Attribute Based Access Control
 
-ABAC adds conditions to role assignements based on attributes of the resources and potentially the principal acessing.
+ABAC adds conditions to role assignements based on attributes of the resources and potentially the principal accessing.
 
 
 
@@ -1069,6 +1069,107 @@ Gibibyte - 2^30
 Mebibyte - 2^20
 
 Kibibyte - 2^10
+
+
+
+
+
+############################# APP SERVICES #############################
+
+
+
+Azure Container Registry
+	- private and public repos
+	- created in a specific region (also zone redundant) but can be replicated to others
+	- allows to run automatic jobs to build container images
+
+
+
+Docker -> containerD -> runC
+
+Hyper-V Containers - container is run in a lightweight VM (isolated kernel)
+
+
+
+
+Azure Container Instances (ACI)
+	- Linux and Windows "Container as a Service"
+	- standard or custom images
+	- public or private (with Linux)
+	- can integrate with AKS via Virtual Kubelet
+
+
+
+Azure Kubernetes Service (AKS)
+	- provides managed Kubernetes control plane
+	- customer pays mainly for worker nodes
+
+
+Kubernetes autoscaling
+	- horizontal pod autoscaling - additional pods on the same node
+	- KEDA - Kubernetes Event Driven Autoscaling - alternative for standard horizontal pod autoscaling (?)
+	- cluster autoscaling - additional nodes in the node pool if can't schedule more pods
+
+
+
+Azure Container Apps
+	- runs on top of AKS but abstracts away complexity
+	- provides additional managed backend services
+	- allows to focus on the application
+	
+
+Azure App Service
+	- hosting of web-based applications (HTTP / gRPC)
+	- variety of runtimes and languages supported
+	- Windows and Linux (also containerized)
+	- compute resources are allocated to service plans
+	- service plans include certain number of worker nodes with auto scale (standard plan and above)
+	- multiple apps can be deployed to the same plan (they share compute resources)
+	- can scale up and out
+	- deployment slots
+	- various VNET integration options
+
+
+Azure App Service Environment
+	- allows to deploy a service plan into a dedicated subnet on a customer's VNET
+	- runs completely separately from other tenants
+
+
+
+Azure Functions
+	- serverless compute based on customer's code
+	- by default PAYG but can run within App Service plan
+	- event driven (HTTP requests, schedule, event grid)
+	- can bind to additional inputs and outputs
+	- variety of languages supported
+
+
+
+Azure Logic Apps
+	- serverless, graphical based orchestration of business logic
+	- low / no code solution
+	- PAYG
+	- runs on Azure Functions
+	- event driven
+	- variety of standard connectors and templates available
+
+
+
+Azure Static Web Apps
+	- globally distributed hosting solution for pre-rendered content
+	- integrates with managed functions (if server side processing required)
+	- DevOps integration
+
+
+
+
+
+
+
+
+
+
+
 
 
 
