@@ -290,19 +290,27 @@ Good monitoring supports resiliency.
 Protecting against infrastructure failure & logical corruption
 
 
+
 Backups / snapshots - previous point-in-time state, protects against logical corruption of data (i.e. ransomware).
+
+
 
 Backups vs snapshots - backups are typically stored in different media.
 
+
+
 Replication - copy of the current data stored somewhere else, protects against physical infrastructure failure.
 
-Replication of data
 
-- if physically close (availability set) - synchronous - High Availability
-- if physically distant (regions pairs) - asynchronous - Disaster Recovery
+
+Replication of data
+- if physically close, within the same location (availability set) - synchronous - High Availability
+- if physically distant, across different locations (regions pairs) - asynchronous - Disaster Recovery
+
 
 
 RPO - Recovery Point Objective - How much data can I loose? (i.e. RPO of 5 minutes - "I can lose up to 5 minutes of data").
+
 
 RTO - Recovery Time Objective - How long till I'll have to be running again?
 
@@ -310,13 +318,18 @@ RTO - Recovery Time Objective - How long till I'll have to be running again?
 
 Protecting against human errors
 
+
 Humans should have as little contact with production as possible.
+
 
 Taking care when using orchestration tools.
 
+
 Automated deployments triggered from version control systems that have automated validation and testing.
 
+
 Deployment patterns (i.e. cannary, rings, blue-green).
+
 
 Established processes.
 
@@ -1166,13 +1179,123 @@ Azure Static Web Apps
 
 
 
+############################# DATABASE & A.I. #############################
+
+
+
+Types of data
+	- structured
+		- relational databases
+	- semi-structured
+		- non-relational
+			- documents (JSON, XML, YAML)
+			- key-value
+			- columnar
+			- graph
+	- unstructured
+		- blobs
+
+
+
+OLTP - Online Transaction Processing
+
+
+
+
+SQL Server offerings
+	- SQL Server in a VM with agent extension (lightweight / full extension mode, helps to deal with customer's responsibilities - backup, patching, HA/DR, etc.)
+
+	- Azure SQL Managed Instance - runs inside a delegated subnet inside customer's VNET
+		- near 100% compatibility with regular SQL Server
+		- multiple DBs per Managed Instance
+
+	- Azure SQL Database
+		- full PaaS offering
+		- can integrate with VNETs via standard means (private endpoints, service endpoints)
+		- various deployment models
+			- serverless (without defined underlying resources)
+			- single instance (strictly defined resources for a single instance)
+			- elastic pool (pool of resources for multiple DBs with varying load)
+			- hyperscale (separation of control plane and data storage)
+
+
+
+Open source solutions
+	- based on community editions of popular open source databases (PostgreSQL, MySQL, MariaDB)
+	- enhanced with Azure functionality
+
+	- Azure Database for PostgreSQL / MySQL / MariaDB
+		- different deployment models
+			- single instance (legacy)
+			- flexible (VM based, highly configurable) - only PostgreSQL and MySQL
+
+	- Azure Cosmos DB for PostgreSQL (formerly Azure Database for PostgreSQL - Hyperscale
+
+
+
+Azure Cosmos DB
+	- cloud native
+	- built for global distribution
+	- multi-model, supports various APIs (relational, non-relational)
+	- configurable consistency
+
+
+
+Encryption
+	- all database offerings support encryption including CMK
 
 
 
 
 
+OLAP - Online Analytical Processing
+	- large amount of historical data
+	- read-only
+	- used for gaining insights
+	- data often stored in denormalized format
 
 
+OLTP enables the real-time execution of large numbers of transactions by large numbers of people, whereas online analytical processing (OLAP) usually involves querying these transactions (also referred to as records) in a database for analytical purposes.
+
+
+
+
+Azure Synapse - data warehouse and analytics solution
+
+
+
+
+Batch - interval based data processing (data is processed in large chunks)
+
+Stream - real-time stream of data (data processed as it arrives)
+
+
+Data flows
+	- ETL - Extract Transform Load
+	- ELT - Extract Load Transform
+
+
+Extract - extract data from the format it was provided in by the given source
+
+Transform - transforming data to the desired state (i.e. removing duplicates, normalazing formats etc.)
+
+Load - puting extracted / transformed data in a storage (sink)
+
+
+
+Azure Data Factory - solution for controling and orchestrating flow of data through data pipeline
+
+
+
+
+
+AI - a broad field focusing on building machines / writing programs emulating human intelligent bahviour.
+
+Machine learning - subset of artificial intelligence that automatically enables a machine or system to learn (by analyzing large amounts of data) and improve from experience.
+
+
+
+Azure Cognitive Services - set of AI & ML solutions.
 
 
 
