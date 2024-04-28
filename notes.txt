@@ -1302,6 +1302,246 @@ Azure Cognitive Services - set of AI & ML solutions.
 
 
 
+############################# MONITORING & SECURITY #############################
+
+
+CNCF - Cloud Native Computing Foundation
+
+
+
+##### IDENTITY MONITORING
+
+- Entra ID logs (i.e. sign-in, audit) - kept for 7 / 30 days (with premium license)
+
+
+
+##### RESOURCES MONITORING (control plane)
+
+- subscriptions (i.e. activity log, service health) - kept for 90 days
+
+
+Activity log - stores events related to control plane of Azure services (not data plane)
+
+
+- resources
+	- metrics - always available - kept for 93 days
+	- logs - not gathered by defalut, need to be configured via Diagnostic settings
+
+
+
+Azure Monitor Metrics - time series database aggregating metrics from across all resources
+
+Azure Monitor Logs = Azure Log Analytics Workspace
+
+
+Diagnostic settings can be bulk configured via Azure Policy (rather than per resource).
+
+
+Possible log data destinations that can be configured via Diagnostic settings
+	- Storage Account - to simply keep data
+
+	- Event Hub - publish / subscribe solution that allows to stream data to external 3P solutions
+
+	- Log Analytics Workspace - to keep data and perform analytics on it (KQL)
+
+	- Dedicated 3P solutions (ISVs)
+
+
+
+Azure Log Analytics Workspace has configurable retention.
+
+
+The ways Azure Log Analytics Workspace can store log data:
+	- Analytics Logs (up to 2 years retention)
+	- Basic Logs (data stored for 8 days, no configurable retention, limited set of query / analysis capabilities)
+	- Archive Logs (up to 7 years retention, data is moved there after interactive retention period has passed and cannot be queried directly)
+
+To query log data in Archive Logs
+	- a search job - runs in the Archive Log and returns results to Azure Log Analytics Workspace table
+	- restore - restores a set of data to Azure Log Analytics Workspace
+
+
+###### RESOURCES MONITORING (data plane)
+
+
+Azure Monitor Agent
+	- allows to gather data from inside the resource (i.e. guest OS logs / metrics) and send them to Azure Monitor Metrics (metrics) or Azure Log Analytics Worksapce (logs)
+
+Data Collection Rules
+	- define data to be collected by Azure Monitor Agent
+
+
+Container Insights
+	- uses pod running Azure Monitor Agent to gather data from AKS
+	- can be configured to gather data at various time intervals (allows to save money on Azure Log Analytics Workspace storage)
+
+
+Data from some of resources can be gathered via Prometheus and sent to Azure Monitor Workspace or Azure Managed Grafana
+
+
+Application Insights
+	- allows to capture application metrics and logs 
+
+
+There is possibility to send metrics / log data to Azure Monitor Metrics / Log Analytics Workspace via REST API.
+
+
+
+Log data of services that send it directly to Azure Log Analytics Workspace can be send to Storage Account or Event Hub by using table export job.
+
+To filter data sent with table export job an Azure Logic App or Azure Function can be used.
+
+
+
+Insights
+	- curated set of metrics / log / activity log data that is automatically configured
+	- available for all of the key types of resources
+
+
+
+
+###### VISUALISING DATA
+
+
+dashboards
+	- single pane of glass
+	- allows to display data from activity logs, service health logs, Azure Monitor metrics, Azure Log Analytics Workspace logs, Azure Resource Graph, ARM API
+	- easy to share
+
+
+workbooks
+	- dokument like flow
+
+
+Grafana
+	- Azure Monitor Metrics plug-in for Grafana
+
+
+Power BI
+
+
+
+
+###### ALERTING
+
+
+Alert Rules
+	- based on activity log, metrics, logs
+	- metric - within 60 seconds (fast metric pipeline), stateful
+	- logs - based on queries (result value vs number of results) run in intervals, not stateful
+
+
+Alert Processing Rules
+	- can be used to call action groups based on alerts
+	- can be used to suppress alerts (one time or recurring (i.e. maintenance windows)
+
+
+Action Groups
+	- allow to define set of notifications / action that will be carried out based on alerts
+	- SMS, email, ITSM, Azure Function, Event Hub, web hook
+
+
+
+
+
+###### SECURITY
+
+
+- hygiene
+	- patching (i.e. critical < 1 week, non-critical < 1 month)
+	- encryption
+	- JEA / JIT
+	- MFA / passwordless
+
+- monitoring
+
+- threat protection
+
+- shift left on security (incorporating security early in the development process and not as an afterthought)
+
+
+
+
+Zero trust
+	- verify explicitly (constat reevaluation of access)
+	- use least privilege (user, devices, service principals / network segmentation)
+	- assume breach (constant monitoring and decisions (conditional access) / policies based on that)
+
+
+
+
+Defender for Cloud
+	- basic
+		- free
+		- hybrid and multi-cloud environment (based on ARC outside of Azure)
+		- basic CSPM
+
+	- enhanced
+		- paid
+		- Defender CSPM (additional capablities around regulatory compliance)
+		- Defender for [...] (independently turned on threat protection mechanism for various resources)
+		- Cloud Security Explorer
+		- Attack Path Analysis
+		- etc.
+
+
+CSPM - Cloud Security Posture Management
+	- provides security score and recommendations based on audit policies (dedicated Azure Policy initiative)
+
+
+
+Azure Sentinel
+	- SIEM / SOAR with XDR capabilities
+	- ingest data from multiple sources (also multi-cloud and hybrid) and provides intelligence, alerting and incident management
+	- built on Log Analytics Workspace
+	- multiple standard connectors + marketplace
+	- automation capabilities (i.e. Jupiter notebooks, hunting)
+
+
+
+
+Managed Identity
+	- allows resources / processes inside to authenticate without need to store credentials in config / code
+	- credentials are tied to the Azure resource
+	- supported by almost all services
+	- can be system-assigned (1:1) or user-assigned (1:n)
+
+
+
+
+Azure Key Vault
+	- support for
+		- secrets - read / write
+		- keys - import / generate / cryptographic operations
+		- certificates - distribution / life-cycle management
+	- support for auto rotation policies
+	- access policy (legacy) or RBAC access model
+	- Azure Policy support for governance
+	- can be event source for Event Grid
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
