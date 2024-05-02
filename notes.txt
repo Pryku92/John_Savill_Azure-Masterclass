@@ -1,55 +1,74 @@
 ############################# IDENTITY #############################
 
 
-group membership types:
+types of protocol utilised by Entra ID
+	- OAUTH2
+	- OIDC
+	- SAML
+	- WS-FED
 
-- assigned
-- dynamic (Entra ID P1)
+
+
+group membership types:
+	- assigned
+	- dynamic (Entra ID P1)
+
+
 
 group types:
+	- security
+	- MS365
 
-- security
-- MS365
+
 
 Entra ID licenses
+	- free
+	- premium P1 / P2
+	- "Governance" add-on
 
-- free
-- Visual Studio
-- premium P1 / P2
-- assinged individually or to groups
+	- often bundled with other products
+	- assinged individually or to groups
+
 
 
 Entra ID objects
+	- users
+	- groups
+	- enterprise applications /  Azure resources (service principals)
+	- managed identities
+	- devices
+	- "stuff"
 
-- users
-- groups
-- enterprise applications /  Azure resources (service principals)
-- managed identities
-- devices
-- "stuff"
 
 
 Entra ID device types:
+	- registered / authn MSA  - becomes known entity (BYOD)
+	- joined / authn Entra ID
+	- hybrid (joined to on-prem AD and synced to Entra ID)
 
-- registered / authn MSA (BYOD)
-- joined / authn Entra ID
-- hybrid (joined to on-prem AD and synced to Entra ID)
 
 
-Entra connect
+Entra Connect
+	- on-prem AD is always the source of truth
+	- single instance of Entra ID can only sync from one Entra connect (and optional staging)
+	- an on-prem AD can sync to multiple Entra ID instances
+	- Entra Connect Cloud Sync - cloud-based sync engine
+	- Entra Connect Sync - on-prem sync engine
 
-- on-prem AD is always the source of truth
-- single instance of Entra ID can only sync from one Entra connect (and optional staging)
-- an on-prem AD can sync to multiple Entra ID instances
-- Entra connect cloud sync - cloud-based sync engine
+
+HR systems integration
+	- Entra ID provides provisioning endpoints for HR systems (to create accounts)
+	- accounts can be created in on-prem ADDS and then synchronised back to Entra ID
+
 
 
 AuthN methods
+	- cloud native
+	- password hash sync (PHS) - cloud
+	- passthrough authentication (PTA) - to on-prem DCs, hybrid
+	- federation - against federation service, hybrid
 
-- cloud native
-- password hash sync (PHS) - cloud
-- passthrough authentication (PTA) - to on-prem DCs, hybrid
-- federation - against federation service, hybrid
+
 
 
 Authorization is always against Entra ID.
@@ -69,37 +88,33 @@ portal.azure.com
 
 
 Privileged identity management
-
-- enables elevation of Entra ID (and ARM) roles when needed for limited time
-- can be used to elevate to a privileged group membership or ownership for limited time
-- roles must be pre-assigned to be available to users
-- Entra ID P2
+	- enables elevation of Entra ID (and ARM) roles when needed for limited time
+	- can be used to elevate to a privileged group membership or ownership for limited time
+	- roles must be pre-assigned to be available to users
+	- Entra ID P2
 
 
 Privileged identitiy management (PIM) is Entra ID's just in time solution.
 
 
 Entra permissions management
-
-- allows on-demand elevation
-- ad-hoc (as opposed to premeditated process with PIM)
-- works across clouds (Azure, AWS, GCP)
-- can analyze permissions used and right size
-- separate license
+	- allows on-demand elevation
+	- ad-hoc (as opposed to premeditated process with PIM)
+	- works across clouds (Azure, AWS, GCP)
+	- can analyze permissions used and right size
+	- separate license
 
 
 Access reviews
-
-- allows to act against permissions balooning over time
-- enable review on group membership, app assignment, role assignment
-- reviews by different people (self-review, administrator, delegated people)
-- Entra ID P2
+	- allows to act against permissions balooning over time
+	- enable review on group membership, app assignment, role assignment
+	- reviews by different people (self-review, administrator, delegated people)
+	- Entra ID P2
 
 
 Entra ID MFA
-
-- Entra ID P1 or Security Defaults
-- passwordless is considered phising resistant
+	- Entra ID P1 or Security Defaults
+	- passwordless is considered phising resistant
 
 
 Temporary access pass allows user to set up when using passwordless authentication.
@@ -107,10 +122,8 @@ Temporary access pass allows user to set up when using passwordless authenticati
 
 
 Conditional access
-
-- triggered for any authorization regardless of authentication method
-- Entra ID P1
-
+	- triggered for any authorization regardless of authentication method
+	- Entra ID P1
 
 
 
@@ -140,18 +153,16 @@ Entra Domain Services provides a managed ADDS with objects replicated from Entra
 ############################# GOVERNANCE #############################
 
 Key organizational components
-
-- Management groups
-- Subscriptions
-- Resource groups
+	- Management groups
+	- Subscriptions
+	- Resource groups
 
 
 Governance capabilities
-
-- RBAC
-- Policy
-- Budget
-- locking (subscriptions, resource groups, resources)
+	- RBAC
+	- Policy
+	- Budget
+	- locking (subscriptions, resource groups, resources)
 
 
 
@@ -165,6 +176,8 @@ compliance.microsoft.com
 
 Root management group is automatically created when first management group is created.
 
+Management group structure is tied to a particular Entra ID tenant.
+
 Subscriptions can be moved between different Entra ID tenants.
 
 Every resource exists in a single resource group.
@@ -174,12 +187,11 @@ Resource groups cannot be nested.
 
 
 RBAC
-
-- works at all level (management group -> individual resources)
-- inherited
-- works at the management plane (some services support data plane actions)
-- actions that can be included in an RBAC role are defined in resource providers
-- can create custom roles
+	- works at all level (management group -> individual resources)
+	- inherited
+	- works at the management plane (some services support data plane actions)
+	- actions that can be included in an RBAC role are defined in resource providers
+	- can create custom roles
 
 
 resources.azure.com - to see resource providers
@@ -192,34 +204,34 @@ ABAC adds conditions to role assignements based on attributes of the resources a
 
 
 Policy
+	- can be used for enforcement and audit
+	- start with audit!
+	- a policy is a set of conditions built around resource attribute aliases and an effect
+	- can impact operations (DenyAction)
+	- can be grouped into initiatives for assignment and compliance
 
-- can be used for enforcement and audit
-- start with audit!
-- a policy is a set of conditions built around resource attribute aliases and an effect
-- can impact operations (DenyAction)
-- can be grouped into initiatives for assignment and compliance
 
+
+Microsoft Cloud Security Benchmark initiative is free, other regulatory compliance initiatives require a paide plan.
 
 
 
 Cost management and budgets
-
-- cost management provides insight and control of Azure (and AWS) spend
-	- cost analysis
-	- cost anomaly alerts
-	- budgets (alerts & action groups)
-- cost allocation (cost spliting of shared resources) with Enterprise Agreement or Customer Agreement
-- API available
-- pricing calculator
+	- cost management provides insight and control of Azure (and AWS) spend
+		- cost analysis
+		- cost anomaly alerts
+		- budgets (alerts & action groups)
+	- cost allocation (cost spliting of shared resources) with Enterprise Agreement or Customer Agreement
+	- API available
+	- pricing calculator
 
 
 
 Cost optimization
-
-- right sizing, autoscaling, serverless, shutdown unused resources
-- Reserved Instances - discount for a commitment of specific resource / family in specific region for 1 or 3 years
-- Azure Savings Plan - discount (lower than RI) for 1 or 3 years commitment, more flexible and broad than RI
-- Azure Hybrid Benefit - allows utilization of existing Windows and SQL licenses to Azure resources
+	- right sizing, autoscaling, serverless, shutdown unused resources
+	- Reserved Instances / Azure Reservations - discount for a commitment of specific resource / family in specific region for 1 or 3 years
+	- Azure Savings Plan - discount (lower than RI) for 1 or 3 years commitment, more flexible and broad than RI
+	- Azure Hybrid Benefit - allows utilization of existing Windows, SQL and other licenses to Azure resources
 
 
 On-Demand Capacity Reservation provides SLA backed capacity availability and works with cost optimization tool (i.e. Reserved Instances).
@@ -248,7 +260,7 @@ Blueprints gather together different types of artifacts (resource groups, RBAC, 
 
 Blueprints have "ability" to deny actions (i.e. write or delete operations).
 
-Deployment Stacs perform similar function - they are deployment of a collection of resources and perform lifecycle operations on that collection of resources.
+Deployment Stacks perform similar function - they are deployment of a collection of resources and perform lifecycle operations on that collection of resources.
 
 
 
@@ -260,7 +272,7 @@ KQL is also used in Log Analytics.
 
 ARG can be used via portal or command line.
 
-ARG powers Resource Configuration Changes (ResourceChanges)
+ARG powers Resource Configuration Changes (ResourceChanges / Change Analysis in portal)
 
 
 
@@ -542,13 +554,10 @@ There is option to turn on immutability on backup vaults.
 ############################# STORAGE #############################
 
 Types of data
+	- structured - adhering to a strict, defined schema (i.e. databases)
+	- unstructured - blobs - media files, PDF documents, etc.
+	- semi-structured - XML, JSON
 
-- structured - adhering to a strict, defined schema (i.e. databases)
-- unstructured - blobs - media files, PDF documents, etc.
-- semi-structured - XML, JSON
-
-
-Different workloads have needs for ephemeral or durable storage.
 
 Azure doesn't use traditional storage such as Storage Area Networks (mostly).
 
@@ -563,60 +572,55 @@ Data is replicated in two ways
 
 
 Azure Storage Account
-
-- top-level namespace for storage services
-- created in a region
-- different types of storage accounts (standard vs premium)
-- various redundancy (replication) settings
-- supports API access
-- have 2 all-powerful account keys (protect OR disable them)
-- performance varies based on the account type (standard vs premium)
-- supports different access tiers (varies by the service type)
-- can enable monitoring and logging
+	- top-level namespace for storage services
+	- created in a region
+	- different types of storage accounts (standard vs premium)
+	- various redundancy (replication) settings
+	- supports API access
+	- have 2 all-powerful account keys (protect OR disable them)
+	- performance varies based on the account type (standard vs premium)
+	- supports different access tiers (varies by the service type)
+	- can enable monitoring and logging
 
 
 Standard performance storage services are consumption-based.
 
-Some premium storage services are provision-based (based on size).
+Some premium storage services are provision-based (billed based on size, as well as the performance is tied to size).
 
 Managed disks are always provision-based.
 
 
 
-Access tiers
+Access tiers (General-purpose V2):
+	Block blob:
+		- hot
+		- cool
+		- cold
+		- archcive (offline)
 
-General-purpose V2 storage account:
-	- hot
-	- cool
-	- archcive (offline)
+		- set at the blob level (per blob)
 
-- set at the blob level (per blob)
+	Files shares:
+		- transaction optimized
+		- hot
+		- cool
 
-Files shares:
-	- transaction optimized
-	- hot
-	- cool
-
-- set at the file share level
+		- set at the file share level
 
 
 
 Storage account services
-
-- blob
-- table (entities (key - value pairs))
-- queue (FIFO (not guaranteed) messages)
-- files (shares - SMB or NFS)
-
+	- blob
+	- table (entities (key - value pairs))
+	- queue (FIFO (not guaranteed) messages)
+	- files (shares - SMB or NFS)
 
 
-Blob storage
 
 Types of blobs:
-
-- block
-- page (random operations)
-- append
+	- block
+	- page (random operations)
+	- append
 
 
 Block blob storage support hierarchical namespace (file system) via Azure Data Lake Storage gen. 2
@@ -633,43 +637,37 @@ Azure Storage Explorer
 
 
 
-AzCopy - command-line tool to copy data to / from and between Storage Accounts.
+AzCopy
+	- command-line tool to copy data to / from and between Storage Accounts
+	- async server side copy feature allows to copy data directly between Storage Accounts
 
 
 
 
-Data Lake
-
-Azure Data Lake Storage gen. 2 builds on blob
-
-ADLSgen2 provides a data lake which is common as raw store for data pipeline (ETL & ELT).
-
-ADLSgen2 provides true directory structure (regular blob is flat with any structure being virtual).
-
-ADLSgen2 supports POSIX ACLs, as well as Entra ID data plane RBAC.
-
-Data lake is mainly used for data analytics.
+Azure Data Lake Storage gen. 2 (ADLSgen2)
+	- builds on blob
+	- provides a data lake which is common as raw store for data pipeline (ETL & ELT).
+	- provides true directory structure (regular blob is flat with any structure being virtual).
+	- supports POSIX ACLs, as well as Entra ID data plane RBAC.
+	- mainly used for data analytics.
 
 
 
 Statis website hosting in blob storage
-
-A static content website can be hosted via blob storage (enabled at the storage account level).
-
+	- a static content website can be hosted via blob storage (enabled at the storage account level)
 
 
 
 Azure Storage access control
+	- Entra ID integration (data plane RBAC)
 
-- Entra ID integration (data plane RBAC)
-	- blob
-	- queue
-	- table
-- account keys - can be disabled
-- Shared Access Signatures (SAS) - signed with account keys (access keys need to be enabled)
-	- account SAS - only ad-hoc (can't be revoked without regenerating the signing account key)
-	- service SAS - ad-hoc or via Stored Access Policy (can be revoked)
-- Azure Files integration with ADDS and Entra ID DS
+	- account keys - can be disabled
+
+	- Shared Access Signatures (SAS) - signed with account keys (access keys need to be enabled)
+		- account SAS - only ad-hoc (can't be revoked without regenerating the signing account key)
+		- service SAS - ad-hoc or via Stored Access Policy (can be revoked)
+
+	- Azure Files integration with ADDS and Entra ID DS
 
 
 
@@ -679,12 +677,11 @@ DO NOT STORE ACCOUNT KEYS OR SAS IN APP CODE / CONFIG FILES
 
 
 Encryption
-
-- storage accounts are always encrypted at rest
-- encrypted with Microsoft managed keys or Customer Managed Keys (via Azure Key Vault)
-- cross-tenant Customer Managed Keys supported
-- different container / blob level encryption possible via Encryption Scopes
-- encryption in transit can be enforced at the storage account level
+	- storage accounts are always encrypted at rest
+	- encrypted with Microsoft managed keys (PMK - Platform Managed Key) or Customer Managed Keys (CMK, via Azure Key Vault)
+	- cross-tenant Customer Managed Keys supported
+	- different container / blob level encryption possible via Encryption Scopes
+	- encryption in transit can be enforced at the storage account level
 
 
 
@@ -739,7 +736,8 @@ Managed Disks
 	- limited distributed (GRS, ZRS) replication options
 	- can add resiliency by aligning with Availability Sets
 	- can be shared by multiple VMs (maxShares property)
-	- Customer Managed Key can be used via Disk Encryption Sets which Managed Disks are placed in
+	- Customer Managed Key can be used via Disk Encryption Sets which Managed Disks are placed in - encryption at rest
+	- Encryption at Host can be used for additional encryption - encryption in transit
 
 
 
@@ -854,8 +852,8 @@ Outbound connectivity services
 Inbound connectivity services
 	- global (not bound to specific regions)
 		- Azure Front Door (L7)
-		- Global Load Balancer (L4)
-		- Azure Traffic Manager (L4, DNS based)
+		- Global Load Balancer / Cross-Region Load Balancer (L4)
+		- Azure Traffic Manager (DNS based)
 	- regional (deployed in a particular region)
 		- App Gateway (L7)
 		- Load Balancer (L4)
@@ -863,7 +861,9 @@ Inbound connectivity services
 	Azure Firewall ??
 
 
-Azure Bastion - managed jump box.
+
+Azure Bastion
+	- managed jump box.
 
 
 
@@ -879,11 +879,21 @@ Connecting Virtual Networks
 	- there is a small ingress and egress charge for traffic via network peering (between regions ?)
 	- IP address spaces cannot overlap
 	- peerings can span subscriptions and Entra ID tenants
-	- peerings are not transitive (can be by using UDR or Azure Virtual Network Manager)
+	- peerings are not transitive (can be by using UDR or Azure Virtual Network Manager or Azure Virtual WAN)
 
 
 
-Azure Virtual Network Manager - ??
+Allowing gateway transit in peered VNETs
+	- on the hub side - allow gateway transit
+	- on the spoke side - use remote gateway
+
+
+
+Azure Virtual Network Manager
+	- allows to centrally manage connectivity between VNETs (hub and spoke or mesh) by placing them in the same network groups (static or dynamic)
+	- allows to define Security Admin Rules that control traffic before it reaches VNET's / subnet's local NSG
+	- Security Admin Rules can allow, deny or always allow traffic
+	- always allow allows to ignore VNET's / subnet's local NSG, even if it would deny traffic
 
 
 
@@ -891,8 +901,10 @@ Connecting to on-premises
 	- P2S VPN - connects a specific device to a virtual network
 	- S2S VPN - connects a network to a virtual network
 		- S2S VPN gateways enable multiple VPN connections to different networks (route based, not policy based)
-	- ExpressRoute Private Peering - connects a network to a virtual network via peering location and ExpressRoute Gateway
+	- ExpressRoute Private Peering - connects an on-prem network to a virtual network via peering location and ExpressRoute Gateway
 		- ExpressRoute circuits enable multiple virtual networks to be connected to a single circuit (for connecting VNETs better to use peering)
+	- ExpressRoute Microsoft Peering - allows to connect from on-prem networks to Azure PaaS services over the ExpressRoute circuits (rather than going over the internet or via VNET and a private endpoint)
+
 
 
 ExpressRoute has the benefit of not going over the internet - privacy and consistent latency.
@@ -904,7 +916,7 @@ Azure ExpressRoute pricing
 	- unmetered
 
 
-Global Reach - allows to connect on prem locations via Microsoft backbone
+Global Reach - allows to connect on-prem locations via Microsoft backbone (ExpressRoute circuits)
 
 
 
@@ -927,6 +939,7 @@ Network Security Group
 	- implementation of layer 4 ACLs
 	- made up of rules based on IP ranges / tags, ports and actions
 	- can be applied at the subnet or NIC level but are always enforced at the NIC (better to apply at the subnet level - more managable)
+	- has to be in the same region with the VNET applied to
 
 
 
@@ -953,7 +966,9 @@ Application Security Group
 Azure Virtual WAN
 	- provides a managed hub
 	- each region within the VWAN instance gets a hub
-	- SKUs - basic / standard
+	- SKUs
+		- basic - S2S VPN
+		- standard - S2S VPN, ExpressRoute, transitive VNET peering
 
 
 
@@ -980,7 +995,7 @@ Azure Private Link / Private Endpoint
 	- by default most PaaS services have an external facing endpoint
 	- Private Link allows to create a Private Endpoint in a specific VNET / subnet (IP from that address space) for a specific instance of a PaaS service
 	- resources in the VNET can interact via the Private Endpoint directly to the service (as if it was in the same network / subnet)
-	- Private Endpoints can also point to custom services (i.e. sitting behind a load balancer) - removes the need to peer VNETs and allows to circumvent issue of overlapping IP address spaces.
+	- Private Endpoints can also point to custom services (i.e. sitting behind a load balancer) - removes the need to peer VNETs and allows to circumvent issue of overlapping IP address spaces, requires Private Link Service
 	- becuase Private Endpoints are instance specific, they help prevent data exfiltration
 
 
@@ -991,12 +1006,13 @@ Azure Private Link / Private Endpoint
 
 
 DNS in Azure
+	- global service (zone can be used by any VNET in any region, also in any subscription and any Entra ID tenant)
 	- VNETs can use Azure DNS or custom DNS
 	- Azure DNS can provide public and private zones
 	- VNETs can be linked to private DNS zones in addition to the built-in internal.cloudapp.net which is always present
-		- 1 private zone for auto-registration
-		- up to 1000 private zones for resolution
-	- Private DNS Resolver service available (allows to resolve inbound and outbound queries between Azure private DNS and custom customer-managed DNS servers)
+		- 1 private zone for auto-registration (one private zone can be linked to up to 100 VNETs)
+		- up to 1000 private zones for resolution (one private zone can be linked to up to 1000 VNETs)
+	- Private DNS Resolver service available (allows to forward DNS queries from outside VNET, as well as resolve inbound and outbound queries between Azure private DNS and custom customer-managed DNS servers)
 
 
 
@@ -1524,8 +1540,73 @@ Azure Key Vault
 
 
 
+############################# IaC & DevOps #############################
 
 
+
+shell.azure.com
+
+
+Cloud Shell
+	- provides temporary, container-based environment to run Powershell / Azure CLI commands
+	- requires Storage Account (Azure Files) for storage
+
+
+Ways to interact with Azure
+	- portal
+		- intuitive but not scalable
+
+	- imperative
+		- Powershell with Az module / Azure CLI
+		- cross-platform
+		- difficult to verify whether deployed resources match scripts
+		- good for automation
+
+	- declarative
+		- ARM templates, Bicep files, Terraform, etc.
+		- easy to detect config drift
+		- SCM compatibility
+		- can be used for Azure fabric (ARM) and within resources (VM guest, K8S deployments)
+		- good for provisioning
+
+
+
+Azure Functions automatically use Managed Identites if available.
+
+
+Azure Resource Graph
+	- read-only database
+	- querying via ARM and Resource Providers can be slow and expensive (i.e. hourly transaction quota limit)
+
+
+
+
+ARM templates
+	- everything in Azure is stored in JSON format
+	- it's possible to view and export templates for new and existing resources
+	- library of starter templates available at github (Azure Quickstart Templates)
+	- extension available for VS Code
+	- incremental (default) vs complete mode of deployment
+	- can be linked and nested for more advanced, modular configuration
+
+
+
+Bicep
+	- an alternative language that transpiles to ARM JSON (it's possible to decompile ARM JSON to Bicep)
+	- designed to be easily understood by humans
+	- has it's own module capabilites to break functionalities into reusable chunks
+	- extension available for VS Code
+
+
+
+Template Specs
+	- solution for storing templates with native integrated version control
+	- functions as a separate Azure resource (with support for Azure Policy, RBAC, etc.)
+
+
+
+
+Azure GitHub Actions
 
 
 
